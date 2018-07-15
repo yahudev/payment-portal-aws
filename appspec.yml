@@ -11,13 +11,12 @@ files:
     destination: /home/ec2-user/node-website/node_modules
 hooks:
   AfterInstall:
+    - location: scripts/stop_server
+      timeout: 300
+      runas: root
     - location: scripts/install_dependencies
       timeout: 300
       runas: root
     - location: scripts/start_server
-      timeout: 300
-      runas: root
-  ApplicationStop:
-    - location: scripts/stop_server
       timeout: 300
       runas: root
