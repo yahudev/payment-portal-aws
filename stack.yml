@@ -1,0 +1,22 @@
+version: '2.2'
+
+volumes:
+  mongo-data:
+    driver: local
+
+services:
+  app:
+    build: .
+    depends_on:
+      - redis
+      - mongo
+    ports:
+      - "3000:3000"
+  redis: 
+    hostname: redis
+    image: redis:3.2-alpine
+  mongo:
+    hostname: mongo
+    image: mongo:3.6
+    volumes:
+      - mongo-data:/data/db
