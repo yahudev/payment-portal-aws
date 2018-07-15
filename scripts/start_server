@@ -2,4 +2,4 @@
 cd /home/ec2-user/node-website
 export PORT=80
 export NODE_ENV=production
-forever start app.js
+forever start bin/www
