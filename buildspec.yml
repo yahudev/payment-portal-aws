@@ -25,7 +25,12 @@ artifacts:
     - README.md
     - package.json
     - app.js
+    - config.js
     - appspec.yml
     - scripts/*
     - node_modules/**/*
     - public/**/*
+    - lib/**/*s
+    - bin/**/*
+    - views/**/*
+    
