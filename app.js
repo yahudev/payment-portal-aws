@@ -8,12 +8,8 @@ var Redis = require('ioredis');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 
-
-
 // payment modules 
 var Paypal = require('./lib/Paypal');
-
-
 
 var bottle = Bottle.pop('default');
 
@@ -33,7 +29,6 @@ bottle.service('mongo', function(_config) {
   return mongoose;
 }, 'config');
 
-bottle.service('paypal', Paypal, 'config', 'app');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -48,6 +43,12 @@ app.set('view engine', 'jade');
 // routes
 app.use('/', require('./routes/index'));
 app.use('/make-payment', require('./routes/make-payment'));
+
+// modules
+bottle.service('paypal', Paypal, 'config', 'app');
+bottle.container.paypal; // init
+
+
 
 
 // catch 404 and forward to error handler
