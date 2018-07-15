@@ -10,6 +10,7 @@ var bodyParser = require('body-parser');
 
 // payment modules 
 var Paypal = require('./lib/Paypal');
+var Braintree = require('./lib/Braintree');
 
 var bottle = Bottle.pop('default');
 
@@ -44,12 +45,12 @@ app.set('view engine', 'jade');
 app.use('/', require('./routes/index'));
 app.use('/make-payment', require('./routes/make-payment'));
 
-// modules
+// modules 
 bottle.service('paypal', Paypal, 'config', 'app');
 bottle.container.paypal; // init
 
-
-
+bottle.service('braintree', Braintree, 'config', 'app');
+bottle.container.braintree; // init
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -110,7 +110,7 @@ router.post('/', schemaValidator, function(req, res, next) {
   } 
   
   // use braintree
-  
+  bottle.container.braintree.paymentRequestHandler(paymentObj, res, next);
 
 });
 
