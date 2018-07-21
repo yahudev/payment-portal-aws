@@ -30,7 +30,7 @@ artifacts:
     - scripts/*
     - node_modules/**/*
     - public/**/*
-    - lib/**/*s
+    - lib/**/*
     - bin/**/*
     - views/**/*
     
