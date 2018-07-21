@@ -8,6 +8,7 @@
   "dependencies": {
     "bottlejs": "^1.7.1",
     "braintree": "^2.11.0",
+    "common-errors": "^1.0.5",
     "cookie-parser": "~1.4.3",
     "credit-card-type": "^7.0.0",
     "debug": "~2.6.9",
@@ -18,11 +19,15 @@
     "jade": "~1.11.0",
     "jshint": "^2.9.5",
     "lodash": "^4.17.10",
+    "md5": "^2.2.1",
     "mongoose": "^5.2.2",
     "morgan": "~1.9.0",
-    "paypal-rest-sdk": "^1.8.1"
+    "paypal-rest-sdk": "^1.8.1",
+    "url-parse": "^1.4.1"
   },
   "devDependencies": {
+    "eslint": "^5.2.0",
+    "eslint-config-google": "^0.9.1",
     "mocha": "^5.2.0",
     "supertest": "^3.1.0",
     "unit.js": "^2.0.0"

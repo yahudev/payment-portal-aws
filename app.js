@@ -1,42 +1,44 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var Bottle = require('bottlejs');
-var Redis = require('ioredis');
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
+let createError = require('http-errors');
+let express = require('express');
+let path = require('path');
+let cookieParser = require('cookie-parser');
+let logger = require('morgan');
+let Bottle = require('bottlejs');
+let Redis = require('ioredis');
+let mongoose = require('mongoose');
+let bodyParser = require('body-parser');
 
-// payment modules 
-var Paypal = require('./lib/Paypal');
-var Braintree = require('./lib/Braintree');
+// payment modules
+let Paypal = require('./lib/Paypal');
+let Braintree = require('./lib/Braintree');
 
-var bottle = Bottle.pop('default');
+let bottle = Bottle.pop('default');
 
-var app = express();
+let app = express();
 bottle.value('app', app);
 
-var config = require('./config.js');
+let config = require('./config.js');
 
-bottle.value('config', config); 
+bottle.value('config', config);
 bottle.service('redis', function(_config) {
   console.info('connecting to redis ' + _config.redisUrl);
   return new Redis(_config.redisUrl);
 }, 'config');
 bottle.service('mongo', function(_config) {
-  console.info('connecting to mongo ' + _config.mongoUrl)
+  console.info('connecting to mongo ' + _config.mongoUrl);
   mongoose.connect(config.mongoUrl);
   return mongoose;
 }, 'config');
+bottle.service('PaymentOrder', require('./models/PaymentOrder'),
+  'config', 'mongo');
 
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -45,8 +47,8 @@ app.set('view engine', 'jade');
 app.use('/', require('./routes/index'));
 app.use('/make-payment', require('./routes/make-payment'));
 
-// modules 
-bottle.service('paypal', Paypal, 'config', 'app');
+// modules
+bottle.service('paypal', Paypal, 'config', 'app', 'PaymentOrder');
 bottle.container.paypal; // init
 
 bottle.service('braintree', Braintree, 'config', 'app');

@@ -13,5 +13,6 @@ module.exports = {
         merchantId: 'pwmm4hpbzgqpz6jf',
         publicKey: 'vkzbfvdhpck64sfk',
         privateKey: '0f6d6f879d88af135cbf90019e9daed1',
-    }
+    },
+    supportCurrencies: ['HKD', 'USD', 'AUD', 'EUR', 'JPY', 'CNY'],
 };

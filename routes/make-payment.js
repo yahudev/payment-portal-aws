@@ -1,19 +1,19 @@
 
-var express = require('express');
-var bottle = require('bottlejs').pop('default');
-var creditCardType = require('credit-card-type');
-var checkSchema = require('express-validator/check').checkSchema;
-var validationResult = require('express-validator/check').validationResult;
+let express = require('express');
+let bottle = require('bottlejs').pop('default');
+let creditCardType = require('credit-card-type');
+let checkSchema = require('express-validator/check').checkSchema;
+let validationResult = require('express-validator/check').validationResult;
 
-var router = express.Router();
+let router = express.Router();
 
 router.get('/', function(req, res, next) {
   res.redirect('/make-payment.html');
 });
 
-var currentYear = new Date().getFullYear().toString().substr(-2);
+let currentYear = new Date().getFullYear().toString().substr(-2);
 console.info('current year for expiry validation: ' + currentYear);
-var schemaValidator = checkSchema({
+let schemaValidator = checkSchema({
   name: {
     in: ['body'],
   },
@@ -23,9 +23,9 @@ var schemaValidator = checkSchema({
   },
   currency: {
     in: ['body'],
-    isIn:  {
+    isIn: {
       // Options as an array
-      options: [['USD','HKD','EUR','AUD','JPY','CNY']],
+      options: [['USD', 'HKD', 'EUR', 'AUD', 'JPY', 'CNY']],
     },
   },
   price: {
@@ -41,13 +41,13 @@ var schemaValidator = checkSchema({
     in: ['body'],
     isCreditCard: true,
   },
-  expiryMonth: {  
+  expiryMonth: {
     in: ['body'],
     isInt: {
       min: 1,
       max: 12,
-      allow_leading_zeroes: true
-    }
+      allow_leading_zeroes: true,
+    },
   },
   expiryYear: {
     in: ['body'],
@@ -55,63 +55,75 @@ var schemaValidator = checkSchema({
       options: {
         min: currentYear,
         max: 99,
-        allow_leading_zeroes: true
-      }
+        allow_leading_zeroes: true,
+      },
     },
   },
   cvv: {
     in: ['body'],
     isInt: {
       options: {
-        allow_leading_zeroes: true
-      }
+        allow_leading_zeroes: true,
+      },
     },
     isLength: {
       options: {
         min: 3,
         max: 4,
-      }
-    }
-  }
+      },
+    },
+  },
 });
 
 /* Handle payment request */
-router.post('/', schemaValidator, function(req, res, next) {
+router.post('/', schemaValidator, async (req, res, next) => {
   // handle validation
-  var errors = validationResult(req);
+  const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.array() });
+    res.status(422).json({errors: errors.array()});
+    return;
   }
-  
-  console.info('make payment form data: ', req.body);
-  var currency = req.body.currency;
-  var ccType = creditCardType(req.body.cardNumber)[0].type;
 
-  var paymentObj = {
-    currency: currency,
-    price: req.body.price,
-    description: 'Custom payment through payment portal',
-  };
-  
-  console.info('Making a payment ', paymentObj);
-  
+  console.info('make payment form data: ', req.body);
+  let currency = req.body.currency;
+  let ccType = creditCardType(req.body.cardNumber)[0].type;
+
   if (currency !== 'USD' && ccType === 'american-express') {
     // show Error
+    next(new Error('American express can only pay USD'));
+  }
+
+  let PaymentOrder = bottle.container.PaymentOrder;
+
+  let order = new PaymentOrder({
+    customerName: req.body.name,
+    customerPhone: req.body.phone,
+    price: req.body.price,
+    currency: req.body.currency,
+  });
+
+  console.info('Created payment order', order);
+
+  try {
+    await order.save();
+  } catch (e) {
+    console.error(' failed to save order ', e, 'order: ', order);
+    next(new Error('Fail to persist order to DB'));
+    return;
   }
 
   if (ccType === 'american-express') {
     // use paypal
-    bottle.container.paypal.paymentRequestHandler(paymentObj, res, next);
+    bottle.container.paypal.paymentRequestHandler(order, res, next);
     return;
-  } else if (['USD','EUR','AUD'].includes(currency)) {
+  } else if (['USD', 'EUR', 'AUD'].includes(currency)) {
     // use paypal
-    bottle.container.paypal.paymentRequestHandler(paymentObj, res, next);
+    bottle.container.paypal.paymentRequestHandler(order, res, next);
     return;
-  } 
-  
-  // use braintree
-  bottle.container.braintree.paymentRequestHandler(paymentObj, res, next);
+  }
 
+  // use braintree
+  bottle.container.braintree.paymentRequestHandler(order, res, next);
 });
 
 module.exports = router;
