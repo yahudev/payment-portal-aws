@@ -46,6 +46,7 @@ app.set('view engine', 'jade');
 // routes
 app.use('/', require('./routes/index'));
 app.use('/make-payment', require('./routes/make-payment'));
+app.use('/check-payment', require('./routes/check-payment'));
 
 // modules
 bottle.service('paypal', Paypal, 'config', 'app', 'PaymentOrder');
