@@ -8,6 +8,7 @@ block content
 
     input#nonce(type="hidden" name="payment_method_nonce")
     input#amount(type="hidden" name='amount' value='#{amount}')
+    input#clientToken(type="hidden" name='clientToken' value='#{clientToken}')
     button.button(type="submit")
       span Submit
 

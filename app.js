@@ -51,7 +51,7 @@ app.use('/make-payment', require('./routes/make-payment'));
 bottle.service('paypal', Paypal, 'config', 'app', 'PaymentOrder');
 bottle.container.paypal; // init
 
-bottle.service('braintree', Braintree, 'config', 'app');
+bottle.service('braintree', Braintree, 'config', 'app', 'PaymentOrder');
 bottle.container.braintree; // init
 
 // catch 404 and forward to error handler
