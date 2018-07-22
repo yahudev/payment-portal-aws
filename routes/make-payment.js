@@ -1,11 +1,16 @@
 
 let express = require('express');
+let asyncWrap = require('express-async-handler');
 let bottle = require('bottlejs').pop('default');
 let creditCardType = require('credit-card-type');
 let checkSchema = require('express-validator/check').checkSchema;
 let validationResult = require('express-validator/check').validationResult;
 
 let router = express.Router();
+
+const {createOrder} = bottle.container.paymentManager;
+const paypal = bottle.container.paypal;
+const braintree = bottle.container.braintree;
 
 router.get('/', function(req, res, next) {
   res.redirect('/make-payment.html');
@@ -76,7 +81,7 @@ let schemaValidator = checkSchema({
 });
 
 /* Handle payment request */
-router.post('/', schemaValidator, async (req, res, next) => {
+router.post('/', schemaValidator, asyncWrap(async (req, res, next) => {
   // handle validation
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -90,40 +95,29 @@ router.post('/', schemaValidator, async (req, res, next) => {
 
   if (currency !== 'USD' && ccType === 'american-express') {
     // show Error
-    next(new Error('American express can only pay USD'));
+    throw new Error('American express can only pay USD');
   }
 
-  let PaymentOrder = bottle.container.PaymentOrder;
+  let gateway;
 
-  let order = new PaymentOrder({
+  if (ccType === 'american-express') {
+    // use paypal
+    gateway = paypal;
+  } else if (['USD', 'EUR', 'AUD'].includes(currency)) {
+    // use paypal
+    gateway = paypal;
+  } else {
+    gateway = braintree;
+  }
+
+  let order = await createOrder({
     customerName: req.body.name,
     customerPhone: req.body.phone,
     price: req.body.price,
     currency: req.body.currency,
   });
 
-  console.info('Created payment order', order);
-
-  try {
-    await order.save();
-  } catch (e) {
-    console.error(' failed to save order ', e, 'order: ', order);
-    next(new Error('Fail to persist order to DB'));
-    return;
-  }
-
-  if (ccType === 'american-express') {
-    // use paypal
-    bottle.container.paypal.paymentRequestHandler(order, res, next);
-    return;
-  } else if (['USD', 'EUR', 'AUD'].includes(currency)) {
-    // use paypal
-    bottle.container.paypal.paymentRequestHandler(order, res, next);
-    return;
-  }
-
-  // use braintree
-  bottle.container.braintree.paymentRequestHandler(order, res, next);
-});
+  gateway.paymentRequestHandler(order, res, next);
+}));
 
 module.exports = router;

@@ -31,7 +31,12 @@ bottle.service('mongo', function(_config) {
 }, 'config');
 bottle.service('PaymentOrder', require('./models/PaymentOrder'),
   'config', 'mongo');
+bottle.service('paymentManager', require('./lib/PaymentManager'),
+  'PaymentOrder', 'redis');
 
+// modules
+bottle.service('paypal', Paypal, 'config', 'app', 'paymentManager');
+bottle.service('braintree', Braintree, 'config', 'app', 'paymentManager');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -48,12 +53,6 @@ app.use('/', require('./routes/index'));
 app.use('/make-payment', require('./routes/make-payment'));
 app.use('/check-payment', require('./routes/check-payment'));
 
-// modules
-bottle.service('paypal', Paypal, 'config', 'app', 'PaymentOrder');
-bottle.container.paypal; // init
-
-bottle.service('braintree', Braintree, 'config', 'app', 'PaymentOrder');
-bottle.container.braintree; // init
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
