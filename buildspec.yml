@@ -12,14 +12,12 @@ phases:
     commands:
       # Discover and run unit tests in the 'tests' directory
       - npm test
-  # // Workaround missing dependencies 
-  # post_build:
-  #   commands:
-  #     # Remove existing node_modules to clear dev dependencies
-  #     - rm -r node_modules
-
-  #     # Install runtime dependencies
-  #     - npm install --production
+  post_build:
+    commands:
+      # Remove existing node_modules to clear dev dependencies
+      - rm -r node_modules
+      # Install runtime dependencies
+      - npm install --production
 artifacts:
   type: zip
   files:
