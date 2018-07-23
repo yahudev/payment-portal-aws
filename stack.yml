@@ -5,18 +5,21 @@ volumes:
     driver: local
 
 services:
-  app:
-    build: .
-    depends_on:
-      - redis
-      - mongo
-    ports:
-      - "3000:3000"
   redis: 
     hostname: redis
     image: redis:3.2-alpine
+    ports:
+      - "6379:6379"
+  mongoclient:
+    image: mongoclient/mongoclient
+    ports:
+      - "9080:3000"
+    environment:
+      MONGO_URL: mongodb://mongo:27017/payment-portal
   mongo:
     hostname: mongo
     image: mongo:3.6
+    ports:
+      - "27017:27017"
     volumes:
       - mongo-data:/data/db

@@ -27,10 +27,12 @@ artifacts:
     - app.js
     - config.js
     - appspec.yml
+    - stack.yml
     - scripts/*
     - node_modules/**/*
     - public/**/*
     - lib/**/*
     - bin/**/*
     - views/**/*
+
     

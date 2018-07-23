@@ -1,6 +1,6 @@
 module.exports = {
-    redisUrl: 'redis://redis:6379/1',
-    mongoUrl: 'mongodb://mongo:27017/payment-portal',
+    redisUrl: 'redis://localhost:6379/1',
+    mongoUrl: 'mongodb://localhost:27017/payment-portal',
     publicUrl: 'http://carmandy.ddns.net:3000',
     paypal: {
         type: 'sandbox',
