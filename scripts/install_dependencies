@@ -8,4 +8,4 @@ sudo yum install -y docker
 sudo service docker start
 sudo usermod -a -G docker ec2-user
 sudo pip install docker-compose
-sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+sudo ln -sf /usr/local/bin/docker-compose /usr/bin/docker-compose
