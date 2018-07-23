@@ -1,88 +1,67 @@
-Welcome to the AWS CodeStar sample web application
-==================================================
+# Payment Portal
 
-This sample code helps get you started with a simple Express web application
-deployed by AWS CodeDeploy to an Amazon EC2 instance.
+## Todo/Issues
 
-What's Here
------------
+- [ ] Lightbox on payment result and error handling
+- [ ] Client-side form validation
+- [ ] Unable complete test for successful paypal transaction
 
-This sample includes:
+## Getting Started
 
-* README.md - this file
-* app.js - this file contains the code for your application
-* appspec.yml - this file is used by AWS CodeDeploy when deploying the web
-  application to EC2
-* buildspec.yml - this file is used by AWS CodeBuild to package your project.
-* package.json - this file contains various metadata relevant to your Node.js
-  application such as dependencies
-* public/ - this directory contains static web assets used by your application
-* scripts/ - this directory contains scripts used by AWS CodeDeploy when
-  installing and deploying your application on the Amazon EC2 instance
-* tests/ - this directory contains unit tests for your application
+### Prerequisite
 
+To run the application, you need:
+- NodeJs 8+
+- Docker 1.12+ with docker-compose.
+- A public accessible url for payment vendors (e.g. Paypal) web hooking. e.g. http://your.domain.com:3000
 
-Getting Started
----------------
+### Install dependencies
 
-These directions assume you want to develop on your local computer, and not
-from the Amazon EC2 instance itself. If you're on the Amazon EC2 instance, the
-virtual environment is already set up for you, and you can start working on the
-code.
+Install nodejs dependencies
+```
+npm i 
+```
 
-To work on the sample code, you'll need to clone your project's repository to your
-local computer. If you haven't, do that first. You can find instructions in the
-AWS CodeStar user guide.
+### Run the supporting services
 
-1. Install Node.js on your computer.  For details on available installers visit
-   https://nodejs.org/en/download/.
+Run mongo and redis with docker compose. At project root directory,
+```
+docker-compose -f stack.yml up -d
+```
 
-2. Install NPM dependencies:
+### Start the application
 
-        $ npm install
+Start the application with ur applcation's public url
+```
+PUBLIC_URL={YOUR_PUBLIC_URL} npm run start
+```
 
-3. Start the development server:
+### Configuration
 
-        $ node app.js
+In case you want to use your own payment solution credentials. Config it in config.js
+```js
+{
+  ...
+  paypal: {
+      type: 'sandbox',
+      account: '{YOUR_PAYAL_SANDBOX_MERCHANT_ACCOUNT}',
+      client_id: '{YOUR_PAYAL_SANDBOX_CLIENT_ID}',
+      client_secret: '{YOUR_PAYAL_SANDBOX_CLIENT_SECRET}',
+  },
+  braintree: {
+      type: 'Sandbox',
+      merchantId: '{YOUR_BRAINTREE_MERCHANT_ID}',
+      publicKey: '{YOUR_BRAINTREE_PUBLIC_KEY}',
+      privateKey: '{YOUR_BRAINTREE_PRIVATE_KEY}',
+  },
+  ...
+}
+```
 
-4. Open http://127.0.0.1:3000/ in a web browser to view your application.
+## AWS
 
-What Do I Do Next?
-------------------
+This project is also deployed on AWS, using AWS Code Star as the Continuous Deployment tool, running on AWS linux instance.
 
-Once you have a virtual environment running, you can start making changes to
-the sample Express web application. We suggest making a small change to
-/public/index.html first, so you can see how changes pushed to your project's
-repository are automatically picked up by your project pipeline and deployed
-to the Amazon EC2 instance. (You can watch the progress on your project
-dashboard.) Once you've seen how that works, start developing your own code,
-and have fun!
+To leverage the free tier, Mongo and Redis are ran inside the same EC2 instance using docker-compose. 
 
-To run your tests locally, go to the root directory of the
-sample code and run the `npm test` command, which
-AWS CodeBuild also runs through your `buildspec.yml` file.
-
-To test your new code during the release process, modify the existing tests or
-add tests to the tests directory. AWS CodeBuild will run the tests during the
-build stage of your project pipeline. You can find the test results
-in the AWS CodeBuild console.
-
-Learn more about AWS CodeBuild and how it builds and tests your application here:
-https://docs.aws.amazon.com/codebuild/latest/userguide/concepts.html
-
-Learn more about AWS CodeStar by reading the user guide.  Ask questions or make
-suggestions on our forum.
-
-User Guide: http://docs.aws.amazon.com/codestar/latest/userguide/welcome.html
-
-Forum: https://forums.aws.amazon.com/forum.jspa?forumID=248
-
-What Should I Do Before Running My Project in Production?
-------------------
-
-AWS recommends you review the security best practices recommended by the framework
-author of your selected sample application before running it in production. You
-should also regularly review and apply any available patches or associated security
-advisories for dependencies used within your application.
-
-Best Practices: https://docs.aws.amazon.com/codestar/latest/userguide/best-practices.html?icmpid=docs_acs_rm_sec
+See stack.yml and scripts/start_env for details.
