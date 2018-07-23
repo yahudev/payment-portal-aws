@@ -3,6 +3,7 @@ cd /home/ec2-user/node-website
 curl -sL https://rpm.nodesource.com/setup_8.x | bash -
 yum install -y nodejs
 npm install forever -g
+sudo yum update -y
 sudo yum install -y docker
 sudo service docker start
 sudo usermod -a -G docker ec2-user
