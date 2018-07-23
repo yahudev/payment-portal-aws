@@ -1,7 +1,9 @@
+const {PUBLIC_URL} = process.env;
+
 module.exports = {
     redisUrl: 'redis://localhost:6379/1',
     mongoUrl: 'mongodb://localhost:27017/payment-portal',
-    publicUrl: 'http://carmandy.ddns.net:3000',
+    publicUrl: PUBLIC_URL,
     paypal: {
         type: 'sandbox',
         account: 'yahudev-facilitator@gmail.com',

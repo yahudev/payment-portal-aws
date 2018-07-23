@@ -1,5 +1,6 @@
 #!/bin/bash
 cd /home/ec2-user/node-website
 export PORT=80
+export PUBLIC_URL=http://$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)
 export NODE_ENV=production
 forever start bin/www
