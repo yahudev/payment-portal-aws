@@ -33,5 +33,7 @@ artifacts:
     - lib/**/*
     - bin/**/*
     - views/**/*
+    - routes/**/*
+    - models/**/*
 
     

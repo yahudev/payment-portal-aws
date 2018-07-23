@@ -15,6 +15,14 @@ files:
     destination: /home/ec2-user/node-website/node_modules
   - source: /bin/
     destination: /home/ec2-user/node-website/bin
+  - source: /lib/
+    destination: /home/ec2-user/node-website/lib
+  - source: /views/
+    destination: /home/ec2-user/node-website/views
+  - source: /models/
+    destination: /home/ec2-user/node-website/models
+  - source: /routes/
+    destination: /home/ec2-user/node-website/routes
   - source: /scripts/
     destination: /home/ec2-user/node-website/scripts
 hooks:
