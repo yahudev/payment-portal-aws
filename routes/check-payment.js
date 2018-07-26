@@ -9,7 +9,7 @@ let router = express.Router();
 const paymentManager = bottle.container.paymentManager;
 
 router.get('/', function(req, res, next) {
-  res.redirect('/check-payment.html');
+  res.render('check-payment');
 });
 
 let schemaValidator = checkSchema({

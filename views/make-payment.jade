@@ -1,0 +1,73 @@
+extends layout
+
+block content
+  form(action='/make-payment', method='POST')
+    legend  Order 
+    .form-group
+      label.col-sm-3.control-label(for='inputName') Customer Name
+      .col-sm-9
+        input.form-control(type='text', name='name', placeholder='Name')
+    .form-group
+      label.col-sm-3.control-label(for='inputPhone') Customer Phone Number
+      .col-sm-9
+        input.form-control(type='text', name='phone', placeholder='Phone Number')
+    .form-group
+      label.col-sm-3.control-label(for='inputCurrency') Currency
+      .col-sm-9
+        select.form-control(name='currency')
+          option HKD
+          option USD
+          option AUD
+          option EUR
+          option JPY
+          option CNY
+    .form-group
+      label.col-sm-3.control-label(for='inputPrice') Price
+      .col-sm-9
+        input.form-control(type='text', name='price', placeholder='Price')
+    legend  Payment 
+    .form-group
+      label.col-sm-3.control-label(for='card-holder-name') Name on Card
+      .col-sm-9
+        input#card-holder-name.form-control(type='text', name='cardHolderName', placeholder="Card Holder's Name")
+    .form-group
+      label.col-sm-3.control-label(for='card-number') Card Number
+      .col-sm-9
+        input#card-number.form-control(type='text', name='cardNumber', placeholder='Debit/Credit Card Number')
+    .form-group
+      label.col-sm-3.control-label(for='expiry-month') Expiration Date
+      .col-sm-9
+        .row
+          .col-xs-3
+            select#expiry-month.form-control(name='expiryMonth')
+              option Month
+              option(value='01') Jan (01)
+              option(value='02') Feb (02)
+              option(value='03') Mar (03)
+              option(value='04') Apr (04)
+              option(value='05') May (05)
+              option(value='06') June (06)
+              option(value='07') July (07)
+              option(value='08') Aug (08)
+              option(value='09') Sep (09)
+              option(value='10') Oct (10)
+              option(value='11') Nov (11)
+              option(value='12') Dec (12)
+          .col-xs-3
+            select#expiry-year.form-control(name='expiryYear')
+              option(value='13') 2013
+              option(value='14') 2014
+              option(value='15') 2015
+              option(value='16') 2016
+              option(value='17') 2017
+              option(value='18') 2018
+              option(value='19') 2019
+              option(value='20') 2020
+              option(value='21') 2021
+              option(value='22') 2022
+              option(value='23') 2023
+    .form-group
+      label.col-sm-3.control-label(for='cvv') Card CVV
+      .col-sm-3
+        input#cvv.form-control(type='text', name='cvv', placeholder='Security Code')
+    button.btn.btn-primary(type='submit') Submit

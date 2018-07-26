@@ -13,7 +13,7 @@ const paypal = bottle.container.paypal;
 const braintree = bottle.container.braintree;
 
 router.get('/', function(req, res, next) {
-  res.redirect('/make-payment.html');
+  res.render('make-payment');
 });
 
 let currentYear = new Date().getFullYear().toString().substr(-2);

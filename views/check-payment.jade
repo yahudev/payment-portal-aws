@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  form(action='/check-payment', method='POST')
+    legend  Order 
+    .form-group
+      label.col-sm-3.control-label(for='name') Customer Name
+      .col-sm-9
+        input.form-control(type='text', name='name', placeholder='Name')
+    .form-group
+      label.col-sm-3.control-label(for='referenceCode') Payment Reference Code
+      .col-sm-9
+        input.form-control(type='text', name='referenceCode', placeholder='e.g. 8l82ficjjwogbl4')
+    button.btn.btn-primary(type='submit') Submit
