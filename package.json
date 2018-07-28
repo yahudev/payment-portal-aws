@@ -26,6 +26,7 @@
     "mongoose-timestamp": "^0.6.0",
     "morgan": "~1.9.0",
     "paypal-rest-sdk": "^1.8.1",
+    "query-string": "^6.1.0",
     "uniqid": "^5.0.3",
     "url-parse": "^1.4.1"
   },
