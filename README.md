@@ -1,11 +1,5 @@
 # Payment Portal
 
-## Todo/Issues
-
-- [ ] Lightbox on payment result and error handling
-- [ ] Client-side form validation
-- [ ] Unable complete test for successful paypal transaction
-
 ## Getting Started
 
 ### Prerequisite
