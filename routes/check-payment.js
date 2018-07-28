@@ -41,9 +41,8 @@ router.post('/', schemaValidator, asyncWrap(async (req, res, next) => {
   }
 
   order = _.pick(order, ['customerName', 'customerPhone', 'price', 'currency', 'ref']);
-  res.send({
-    order,
-  });
+  res.status(200);
+  res.send(_.reduce(order, (message, value, key) => message + `${key}: ${value}\n`, ''));
 }));
 
 module.exports = router;
