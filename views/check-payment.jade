@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  form(action='/check-payment', method='POST')
+  form#check-payment(action='/check-payment', method='POST')
     legend  Order 
     .form-group
       label.col-sm-3.control-label(for='name') Customer Name

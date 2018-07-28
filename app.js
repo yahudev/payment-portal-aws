@@ -7,6 +7,7 @@ let Bottle = require('bottlejs');
 let Redis = require('ioredis');
 let mongoose = require('mongoose');
 let bodyParser = require('body-parser');
+let ArgumentError = require('common-errors').ArgumentError;
 
 // payment modules
 let Paypal = require('./lib/Paypal');
@@ -61,9 +62,15 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
+  
+  if (err instanceof ArgumentError) {
+    res.status(422);
+    res.send(err.message);
+    return;
+  }
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.error = req.app.get('env') === 'development' ? err : {}; 
 
   // render the error page
   res.status(err.status || 500);

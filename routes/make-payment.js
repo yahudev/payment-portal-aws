@@ -5,6 +5,8 @@ let bottle = require('bottlejs').pop('default');
 let creditCardType = require('credit-card-type');
 let checkSchema = require('express-validator/check').checkSchema;
 let validationResult = require('express-validator/check').validationResult;
+let ArgumentError = require('common-errors').ArgumentError;
+let _ = require('lodash');
 
 let router = express.Router();
 
@@ -82,10 +84,15 @@ let schemaValidator = checkSchema({
 
 /* Handle payment request */
 router.post('/', schemaValidator, asyncWrap(async (req, res, next) => {
+  console.log (req);
   // handle validation
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    res.status(422).json({errors: errors.array()});
+    var fields = _.reduce(errors.array(), (out, error) => {
+      out.push(`'${error.param}'`);
+      return out;
+    }, []);
+    res.status(422).send(`Fields ${fields.join(', ')} are invalid.`);
     return;
   }
 
@@ -95,7 +102,7 @@ router.post('/', schemaValidator, asyncWrap(async (req, res, next) => {
 
   if (currency !== 'USD' && ccType === 'american-express') {
     // show Error
-    throw new Error('American express can only pay USD');
+    throw new ArgumentError('American express can only pay USD');
   }
 
   let gateway;
